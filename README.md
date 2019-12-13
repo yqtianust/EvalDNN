@@ -7,9 +7,9 @@ and Shing-Chi, Cheung.
 
 \*The first two author contribute equally. 
 
-This project is mainly supported by $Microsoft Asia Cloud Research Software Fellow Award 2019$
+This project is mainly supported by **Microsoft Asia Cloud Research Software Fellow Award 2019**
 
-A video is here: the link to youtube
+A video is here: https://youtu.be/v69bNJN2bJc
 
 A paper to inroduce this tool is in submit and will be released soon. 
 
