@@ -42,10 +42,17 @@ class ImageNetValDataset(mxnet.gluon.data.Dataset):
     mean = (0.485, 0.456, 0.406)
     std = (0.229, 0.224, 0.225)
 
-    def __init__(self, resize_size, center_crop_size, preprocess, shuffle=False, seed=None, num_max=None):
+    def __init__(self, resize_size, center_crop_size, preprocess, img_dir=None, ground_truth_path=None, shuffle=False, seed=None, num_max=None):
         self._preprocess = preprocess
-        self._dir = common.user_home_dir() + '/EvalDNN-data/ILSVRC2012_img_val'
-        with open(self._dir + '/ILSVRC2012_validation_ground_truth.txt', 'r') as f:
+        if img_dir is None:
+            self._dir  = common.user_home_dir() + '/EvalDNN-data/ILSVRC2012_img_val'
+        else:
+            self._dir  = img_dir
+
+        if ground_truth_path is None:
+            ground_truth_path = self._dir + '/ILSVRC2012_validation_ground_truth.txt'
+
+        with open(ground_truth_path, 'r') as f:
             lines = f.readlines()
         if shuffle:
             if seed is not None:
@@ -101,7 +108,7 @@ def imagenet_benchmark_zoo_model_names():
             'inception_v3', 'xception']
 
 
-def imagenet_benchmark_zoo(model_name, data_original_shuffle=True, data_original_seed=1997, data_original_num_max=None):
+def imagenet_benchmark_zoo(model_name, img_dir=None, ground_truth_path=None, data_original_shuffle=True, data_original_seed=1997, data_original_num_max=None):
     """Get pretrained model, validation data and other relative info for evaluation.
 
     The method provides convenience for getting a pretrained model, validation data

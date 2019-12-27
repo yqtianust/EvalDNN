@@ -88,9 +88,16 @@ class ImageNetValData():
             x = x.astype(np.float32)
             return x
 
-    def __init__(self, fashion, size, transform=None, shuffle=False, seed=None, num_max=None):
-        dir = common.user_home_dir() + '/EvalDNN-data/ILSVRC2012_img_val'
-        with open(dir + '/ILSVRC2012_validation_ground_truth.txt', 'r') as f:
+    def __init__(self, fashion, size, img_dir=None, ground_truth_path=None, transform=None, shuffle=False, seed=None, num_max=None):
+        if img_dir is None:
+            dir = common.user_home_dir() + '/EvalDNN-data/ILSVRC2012_img_val'
+        else:
+            dir = img_dir
+
+        if ground_truth_path is None:
+            ground_truth_path = dir + '/ILSVRC2012_validation_ground_truth.txt'
+
+        with open(ground_truth_path, 'r') as f:
             lines = f.readlines()
         if shuffle:
             if seed is not None:
@@ -134,7 +141,7 @@ def imagenet_benchmark_zoo_model_names():
             'nasnet_mobile', 'nasnet_large']
 
 
-def imagenet_benchmark_zoo(model_name, data_original_shuffle=True, data_original_seed=1997, data_original_num_max=None):
+def imagenet_benchmark_zoo(model_name, data_original_shuffle=True, data_original_seed=1997, img_dir=None, ground_truth_path=None, data_original_num_max=None):
     """Get pretrained model, validation data and other relative info for evaluation.
 
     The method provides convenience for getting a pretrained model, validation data
@@ -177,40 +184,40 @@ def imagenet_benchmark_zoo(model_name, data_original_shuffle=True, data_original
         model = keras.applications.VGG16()
         mean = (103.939, 116.779, 123.68)
         std = (1, 1, 1)
-        data_normalized = ImageNetValData(fashion='vgg_preprocessing', size=224, transform=lambda x: (x[..., ::-1] - mean) / std)
-        data_original = ImageNetValData(fashion='vgg_preprocessing', size=224, transform=None, shuffle=data_original_shuffle, seed=data_original_seed, num_max=data_original_num_max)
+        data_normalized = ImageNetValData(fashion='vgg_preprocessing', size=224, img_dir=img_dir, ground_truth_path=ground_truth_path, transform=lambda x: (x[..., ::-1] - mean) / std)
+        data_original = ImageNetValData(fashion='vgg_preprocessing', size=224, img_dir=img_dir, ground_truth_path=ground_truth_path, transform=None, shuffle=data_original_shuffle, seed=data_original_seed, num_max=data_original_num_max)
         bounds = (0, 255)
         flip_axis = -1
     elif model_name == 'vgg19':
         model = keras.applications.VGG19()
         mean = (103.939, 116.779, 123.68)
         std = (1, 1, 1)
-        data_normalized = ImageNetValData(fashion='vgg_preprocessing', size=224, transform=lambda x: (x[..., ::-1] - mean) / std)
-        data_original = ImageNetValData(fashion='vgg_preprocessing', size=224, transform=None, shuffle=data_original_shuffle, seed=data_original_seed, num_max=data_original_num_max)
+        data_normalized = ImageNetValData(fashion='vgg_preprocessing', size=224, img_dir=img_dir, ground_truth_path=ground_truth_path, transform=lambda x: (x[..., ::-1] - mean) / std)
+        data_original = ImageNetValData(fashion='vgg_preprocessing', size=224, img_dir=img_dir, ground_truth_path=ground_truth_path, transform=None, shuffle=data_original_shuffle, seed=data_original_seed, num_max=data_original_num_max)
         bounds = (0, 255)
         flip_axis = -1
     elif model_name == 'resnet50':
         model = keras.applications.ResNet50()
         mean = (103.939, 116.779, 123.68)
         std = (1, 1, 1)
-        data_normalized = ImageNetValData(fashion='vgg_preprocessing', size=224, transform=lambda x: (x[..., ::-1] - mean) / std)
-        data_original = ImageNetValData(fashion='vgg_preprocessing', size=224, transform=None, shuffle=data_original_shuffle, seed=data_original_seed, num_max=data_original_num_max)
+        data_normalized = ImageNetValData(fashion='vgg_preprocessing', size=224, img_dir=img_dir, ground_truth_path=ground_truth_path, transform=lambda x: (x[..., ::-1] - mean) / std)
+        data_original = ImageNetValData(fashion='vgg_preprocessing', size=224, img_dir=img_dir, ground_truth_path=ground_truth_path, transform=None, shuffle=data_original_shuffle, seed=data_original_seed, num_max=data_original_num_max)
         bounds = (0, 255)
         flip_axis = -1
     elif model_name == 'resnet101':
         model = keras.applications.ResNet101()
         mean = (103.939, 116.779, 123.68)
         std = (1, 1, 1)
-        data_normalized = ImageNetValData(fashion='vgg_preprocessing', size=224, transform=lambda x: (x[..., ::-1] - mean) / std)
-        data_original = ImageNetValData(fashion='vgg_preprocessing', size=224, transform=None, shuffle=data_original_shuffle, seed=data_original_seed, num_max=data_original_num_max)
+        data_normalized = ImageNetValData(fashion='vgg_preprocessing', size=224, img_dir=img_dir, ground_truth_path=ground_truth_path, transform=lambda x: (x[..., ::-1] - mean) / std)
+        data_original = ImageNetValData(fashion='vgg_preprocessing', size=224, img_dir=img_dir, ground_truth_path=ground_truth_path, transform=None, shuffle=data_original_shuffle, seed=data_original_seed, num_max=data_original_num_max)
         bounds = (0, 255)
         flip_axis = -1
     elif model_name == 'resnet152':
         model = keras.applications.ResNet152()
         mean = (103.939, 116.779, 123.68)
         std = (1, 1, 1)
-        data_normalized = ImageNetValData(fashion='vgg_preprocessing', size=224, transform=lambda x: (x[..., ::-1] - mean) / std)
-        data_original = ImageNetValData(fashion='vgg_preprocessing', size=224, transform=None, shuffle=data_original_shuffle, seed=data_original_seed, num_max=data_original_num_max)
+        data_normalized = ImageNetValData(fashion='vgg_preprocessing', size=224, img_dir=img_dir, ground_truth_path=ground_truth_path, transform=lambda x: (x[..., ::-1] - mean) / std)
+        data_original = ImageNetValData(fashion='vgg_preprocessing', size=224, img_dir=img_dir, ground_truth_path=ground_truth_path, transform=None, shuffle=data_original_shuffle, seed=data_original_seed, num_max=data_original_num_max)
         bounds = (0, 255)
         flip_axis = -1
     elif model_name == 'resnet50_v2':
@@ -223,8 +230,8 @@ def imagenet_benchmark_zoo(model_name, data_original_shuffle=True, data_original
         model.load_weights(common.user_home_dir() + '/.keras/models/resnet50v2_weights_tf_dim_ordering_tf_kernels.h5')
         mean = (127.5, 127.5, 127.5)
         std = (127.5, 127.5, 127.5)
-        data_normalized = ImageNetValData(fashion='inception_preprocessing', size=299, transform=lambda x: (x - mean) / std)
-        data_original = ImageNetValData(fashion='inception_preprocessing', size=299, transform=None, shuffle=data_original_shuffle, seed=data_original_seed, num_max=data_original_num_max)
+        data_normalized = ImageNetValData(fashion='inception_preprocessing', size=299, img_dir=img_dir, ground_truth_path=ground_truth_path, transform=lambda x: (x - mean) / std)
+        data_original = ImageNetValData(fashion='inception_preprocessing', size=299, img_dir=img_dir, ground_truth_path=ground_truth_path, transform=None, shuffle=data_original_shuffle, seed=data_original_seed, num_max=data_original_num_max)
         bounds = (0, 255)
         flip_axis = None
     elif model_name == 'resnet101_v2':
@@ -237,8 +244,8 @@ def imagenet_benchmark_zoo(model_name, data_original_shuffle=True, data_original
         model.load_weights(common.user_home_dir() + '/.keras/models/resnet101v2_weights_tf_dim_ordering_tf_kernels.h5')
         mean = (127.5, 127.5, 127.5)
         std = (127.5, 127.5, 127.5)
-        data_normalized = ImageNetValData(fashion='inception_preprocessing', size=299, transform=lambda x: (x - mean) / std)
-        data_original = ImageNetValData(fashion='inception_preprocessing', size=299, transform=None, shuffle=data_original_shuffle, seed=data_original_seed, num_max=data_original_num_max)
+        data_normalized = ImageNetValData(fashion='inception_preprocessing', size=299, img_dir=img_dir, ground_truth_path=ground_truth_path, transform=lambda x: (x - mean) / std)
+        data_original = ImageNetValData(fashion='inception_preprocessing', size=299, img_dir=img_dir, ground_truth_path=ground_truth_path, transform=None, shuffle=data_original_shuffle, seed=data_original_seed, num_max=data_original_num_max)
         bounds = (0, 255)
         flip_axis = None
     elif model_name == 'resnet152_v2':
@@ -251,88 +258,88 @@ def imagenet_benchmark_zoo(model_name, data_original_shuffle=True, data_original
         model.load_weights(common.user_home_dir() + '/.keras/models/resnet152v2_weights_tf_dim_ordering_tf_kernels.h5')
         mean = (127.5, 127.5, 127.5)
         std = (127.5, 127.5, 127.5)
-        data_normalized = ImageNetValData(fashion='inception_preprocessing', size=299, transform=lambda x: (x - mean) / std)
-        data_original = ImageNetValData(fashion='inception_preprocessing', size=299, transform=None, shuffle=data_original_shuffle, seed=data_original_seed, num_max=data_original_num_max)
+        data_normalized = ImageNetValData(fashion='inception_preprocessing', size=299, img_dir=img_dir, ground_truth_path=ground_truth_path, transform=lambda x: (x - mean) / std)
+        data_original = ImageNetValData(fashion='inception_preprocessing', size=299, img_dir=img_dir, ground_truth_path=ground_truth_path, transform=None, shuffle=data_original_shuffle, seed=data_original_seed, num_max=data_original_num_max)
         bounds = (0, 255)
         flip_axis = None
     elif model_name == 'mobilenet':
         model = keras.applications.MobileNet()
         mean = (127.5, 127.5, 127.5)
         std = (127.5, 127.5, 127.5)
-        data_normalized = ImageNetValData(fashion='inception_preprocessing', size=224, transform=lambda x: (x - mean) / std)
-        data_original = ImageNetValData(fashion='inception_preprocessing', size=224, transform=None, shuffle=data_original_shuffle, seed=data_original_seed, num_max=data_original_num_max)
+        data_normalized = ImageNetValData(fashion='inception_preprocessing', size=224, img_dir=img_dir, ground_truth_path=ground_truth_path, transform=lambda x: (x - mean) / std)
+        data_original = ImageNetValData(fashion='inception_preprocessing', size=224, img_dir=img_dir, ground_truth_path=ground_truth_path, transform=None, shuffle=data_original_shuffle, seed=data_original_seed, num_max=data_original_num_max)
         bounds = (0, 255)
         flip_axis = None
     elif model_name == 'mobilenet_v2':
         model = keras.applications.MobileNetV2()
         mean = (127.5, 127.5, 127.5)
         std = (127.5, 127.5, 127.5)
-        data_normalized = ImageNetValData(fashion='inception_preprocessing', size=224, transform=lambda x: (x - mean) / std)
-        data_original = ImageNetValData(fashion='inception_preprocessing', size=224, transform=None, shuffle=data_original_shuffle, seed=data_original_seed, num_max=data_original_num_max)
+        data_normalized = ImageNetValData(fashion='inception_preprocessing', size=224, img_dir=img_dir, ground_truth_path=ground_truth_path, transform=lambda x: (x - mean) / std)
+        data_original = ImageNetValData(fashion='inception_preprocessing', size=224, img_dir=img_dir, ground_truth_path=ground_truth_path, transform=None, shuffle=data_original_shuffle, seed=data_original_seed, num_max=data_original_num_max)
         bounds = (0, 255)
         flip_axis = None
     elif model_name == 'nasnet_mobile':
         model = keras.applications.NASNetMobile()
         mean = (127.5, 127.5, 127.5)
         std = (127.5, 127.5, 127.5)
-        data_normalized = ImageNetValData(fashion='inception_preprocessing', size=224, transform=lambda x: (x - mean) / std)
-        data_original = ImageNetValData(fashion='inception_preprocessing', size=224, transform=None, shuffle=data_original_shuffle, seed=data_original_seed, num_max=data_original_num_max)
+        data_normalized = ImageNetValData(fashion='inception_preprocessing', size=224, img_dir=img_dir, ground_truth_path=ground_truth_path, transform=lambda x: (x - mean) / std)
+        data_original = ImageNetValData(fashion='inception_preprocessing', size=224, img_dir=img_dir, ground_truth_path=ground_truth_path, transform=None, shuffle=data_original_shuffle, seed=data_original_seed, num_max=data_original_num_max)
         bounds = (0, 255)
         flip_axis = None
     elif model_name == 'nasnet_large':
         model = keras.applications.NASNetLarge()
         mean = (127.5, 127.5, 127.5)
         std = (127.5, 127.5, 127.5)
-        data_normalized = ImageNetValData(fashion='inception_preprocessing', size=331, transform=lambda x: (x - mean) / std)
-        data_original = ImageNetValData(fashion='inception_preprocessing', size=331, transform=None, shuffle=data_original_shuffle, seed=data_original_seed, num_max=data_original_num_max)
+        data_normalized = ImageNetValData(fashion='inception_preprocessing', size=331, img_dir=img_dir, ground_truth_path=ground_truth_path, transform=lambda x: (x - mean) / std)
+        data_original = ImageNetValData(fashion='inception_preprocessing', size=331, img_dir=img_dir, ground_truth_path=ground_truth_path, transform=None, shuffle=data_original_shuffle, seed=data_original_seed, num_max=data_original_num_max)
         bounds = (0, 255)
         flip_axis = None
     elif model_name == 'inception_resnet_v2':
         model = keras.applications.InceptionResNetV2()
         mean = (127.5, 127.5, 127.5)
         std = (127.5, 127.5, 127.5)
-        data_normalized = ImageNetValData(fashion='inception_preprocessing', size=299, transform=lambda x: (x - mean) / std)
-        data_original = ImageNetValData(fashion='inception_preprocessing', size=299, transform=None, shuffle=data_original_shuffle, seed=data_original_seed, num_max=data_original_num_max)
+        data_normalized = ImageNetValData(fashion='inception_preprocessing', size=299, img_dir=img_dir, ground_truth_path=ground_truth_path, transform=lambda x: (x - mean) / std)
+        data_original = ImageNetValData(fashion='inception_preprocessing', size=299, img_dir=img_dir, ground_truth_path=ground_truth_path, transform=None, shuffle=data_original_shuffle, seed=data_original_seed, num_max=data_original_num_max)
         bounds = (0, 255)
         flip_axis = None
     elif model_name == 'inception_v3':
         model = keras.applications.InceptionV3()
         mean = (127.5, 127.5, 127.5)
         std = (127.5, 127.5, 127.5)
-        data_normalized = ImageNetValData(fashion='inception_preprocessing', size=299, transform=lambda x: (x - mean) / std)
-        data_original = ImageNetValData(fashion='inception_preprocessing', size=299, transform=None, shuffle=data_original_shuffle, seed=data_original_seed, num_max=data_original_num_max)
+        data_normalized = ImageNetValData(fashion='inception_preprocessing', size=299, img_dir=img_dir, ground_truth_path=ground_truth_path, transform=lambda x: (x - mean) / std)
+        data_original = ImageNetValData(fashion='inception_preprocessing', size=299, img_dir=img_dir, ground_truth_path=ground_truth_path, transform=None, shuffle=data_original_shuffle, seed=data_original_seed, num_max=data_original_num_max)
         bounds = (0, 255)
         flip_axis = None
     elif model_name == 'xception':
         model = keras.applications.Xception()
         mean = (127.5, 127.5, 127.5)
         std = (127.5, 127.5, 127.5)
-        data_normalized = ImageNetValData(fashion='inception_preprocessing', size=299, transform=lambda x: (x - mean) / std)
-        data_original = ImageNetValData(fashion='inception_preprocessing', size=299, transform=None, shuffle=data_original_shuffle, seed=data_original_seed, num_max=data_original_num_max)
+        data_normalized = ImageNetValData(fashion='inception_preprocessing', size=299, img_dir=img_dir, ground_truth_path=ground_truth_path, transform=lambda x: (x - mean) / std)
+        data_original = ImageNetValData(fashion='inception_preprocessing', size=299, img_dir=img_dir, ground_truth_path=ground_truth_path, transform=None, shuffle=data_original_shuffle, seed=data_original_seed, num_max=data_original_num_max)
         bounds = (0, 255)
         flip_axis = None
     elif model_name == 'densenet121':
         model = keras.applications.DenseNet121()
         mean = [0.485, 0.456, 0.406]
         std = [0.229, 0.224, 0.225]
-        data_normalized = ImageNetValData(fashion='vgg_preprocessing', size=224, transform=lambda x: (x / 255.0 - mean) / std)
-        data_original = ImageNetValData(fashion='vgg_preprocessing', size=224, transform=lambda x: x / 255.0, shuffle=data_original_shuffle, seed=data_original_seed, num_max=data_original_num_max)
+        data_normalized = ImageNetValData(fashion='vgg_preprocessing', size=224, img_dir=img_dir, ground_truth_path=ground_truth_path, transform=lambda x: (x / 255.0 - mean) / std)
+        data_original = ImageNetValData(fashion='vgg_preprocessing', size=224, img_dir=img_dir, ground_truth_path=ground_truth_path, transform=lambda x: x / 255.0, shuffle=data_original_shuffle, seed=data_original_seed, num_max=data_original_num_max)
         bounds = (0, 255)
         flip_axis = None
     elif model_name == 'densenet169':
         model = keras.applications.DenseNet169()
         mean = [0.485, 0.456, 0.406]
         std = [0.229, 0.224, 0.225]
-        data_normalized = ImageNetValData(fashion='vgg_preprocessing', size=224, transform=lambda x: (x / 255.0 - mean) / std)
-        data_original = ImageNetValData(fashion='vgg_preprocessing', size=224, transform=lambda x: x / 255.0, shuffle=data_original_shuffle, seed=data_original_seed, num_max=data_original_num_max)
+        data_normalized = ImageNetValData(fashion='vgg_preprocessing', size=224, img_dir=img_dir, ground_truth_path=ground_truth_path, transform=lambda x: (x / 255.0 - mean) / std)
+        data_original = ImageNetValData(fashion='vgg_preprocessing', size=224, img_dir=img_dir, ground_truth_path=ground_truth_path, transform=lambda x: x / 255.0, shuffle=data_original_shuffle, seed=data_original_seed, num_max=data_original_num_max)
         bounds = (0, 255)
         flip_axis = None
     elif model_name == 'densenet201':
         model = keras.applications.DenseNet201()
         mean = [0.485, 0.456, 0.406]
         std = [0.229, 0.224, 0.225]
-        data_normalized = ImageNetValData(fashion='vgg_preprocessing', size=224, transform=lambda x: (x / 255.0 - mean) / std)
-        data_original = ImageNetValData(fashion='vgg_preprocessing', size=224, transform=lambda x: x / 255.0, shuffle=data_original_shuffle, seed=data_original_seed, num_max=data_original_num_max)
+        data_normalized = ImageNetValData(fashion='vgg_preprocessing', size=224, img_dir=img_dir, ground_truth_path=ground_truth_path, transform=lambda x: (x / 255.0 - mean) / std)
+        data_original = ImageNetValData(fashion='vgg_preprocessing', size=224, img_dir=img_dir, ground_truth_path=ground_truth_path, transform=lambda x: x / 255.0, shuffle=data_original_shuffle, seed=data_original_seed, num_max=data_original_num_max)
         bounds = (0, 255)
         flip_axis = None
     else:

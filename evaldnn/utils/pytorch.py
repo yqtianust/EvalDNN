@@ -43,10 +43,17 @@ class ImageNetValDataset(torch.utils.data.Dataset):
     mean = (0.485, 0.456, 0.406)
     std = (0.229, 0.224, 0.225)
 
-    def __init__(self, resize_size, center_crop_size, preprocess, shuffle=False, seed=None, num_max=None):
+    def __init__(self, resize_size, center_crop_size, preprocess, img_dir=None, ground_truth_path=None, shuffle=False, seed=None, num_max=None):
         self._preprocess = preprocess
-        self._dir = common.user_home_dir() + '/EvalDNN-data/ILSVRC2012_img_val'
-        with open(self._dir + '/ILSVRC2012_validation_ground_truth.txt', 'r') as f:
+        if img_dir is None:
+            self._dir = common.user_home_dir() + '/EvalDNN-data/ILSVRC2012_img_val'
+        else:
+            self._dir = img_dir
+
+        if ground_truth_path is None:
+            ground_truth_path = self._dir + '/ILSVRC2012_validation_ground_truth.txt'
+
+        with open(ground_truth_path, 'r') as f:
             lines = f.readlines()
         if shuffle:
             if seed is not None:
@@ -101,7 +108,7 @@ def imagenet_benchmark_zoo_model_names():
             'wide_resnet50_2', 'wide_resnet101_2']
 
 
-def imagenet_benchmark_zoo(model_name, data_original_shuffle=True, data_original_seed=1997, data_original_num_max=None):
+def imagenet_benchmark_zoo(model_name, img_dir=None, ground_truth_path=None, data_original_shuffle=True, data_original_seed=1997, data_original_num_max=None):
     """Get pretrained model, validation data and other relative info for evaluation.
 
     The method provides convenience for getting a pretrained model, validation data
@@ -139,80 +146,80 @@ def imagenet_benchmark_zoo(model_name, data_original_shuffle=True, data_original
     """
     if model_name == 'vgg16':
         model = torchvision.models.vgg16(pretrained=True)
-        dataset_normalized = ImageNetValDataset(256, 224, True)
-        dataset_original = ImageNetValDataset(256, 224, False, shuffle=data_original_shuffle, seed=data_original_seed, num_max=data_original_num_max)
+        dataset_normalized = ImageNetValDataset(256, 224, True, img_dir=img_dir, ground_truth_path=ground_truth_path)
+        dataset_original = ImageNetValDataset(256, 224, False, img_dir=img_dir, ground_truth_path=ground_truth_path, shuffle=data_original_shuffle, seed=data_original_seed, num_max=data_original_num_max)
     elif model_name == 'vgg19':
         model = torchvision.models.vgg19(pretrained=True)
-        dataset_normalized = ImageNetValDataset(256, 224, True)
-        dataset_original = ImageNetValDataset(256, 224, False, shuffle=data_original_shuffle, seed=data_original_seed, num_max=data_original_num_max)
+        dataset_normalized = ImageNetValDataset(256, 224, True, img_dir=img_dir, ground_truth_path=ground_truth_path)
+        dataset_original = ImageNetValDataset(256, 224, False, img_dir=img_dir, ground_truth_path=ground_truth_path, shuffle=data_original_shuffle, seed=data_original_seed, num_max=data_original_num_max)
     elif model_name == 'alexnet':
         model = torchvision.models.alexnet(pretrained=True)
-        dataset_normalized = ImageNetValDataset(256, 224, True)
-        dataset_original = ImageNetValDataset(256, 224, False, shuffle=data_original_shuffle, seed=data_original_seed, num_max=data_original_num_max)
+        dataset_normalized = ImageNetValDataset(256, 224, True, img_dir=img_dir, ground_truth_path=ground_truth_path)
+        dataset_original = ImageNetValDataset(256, 224, False, img_dir=img_dir, ground_truth_path=ground_truth_path, shuffle=data_original_shuffle, seed=data_original_seed, num_max=data_original_num_max)
     elif model_name == 'densenet121':
         model = torchvision.models.densenet121(pretrained=True)
-        dataset_normalized = ImageNetValDataset(256, 224, True)
-        dataset_original = ImageNetValDataset(256, 224, False, shuffle=data_original_shuffle, seed=data_original_seed, num_max=data_original_num_max)
+        dataset_normalized = ImageNetValDataset(256, 224, True, img_dir=img_dir, ground_truth_path=ground_truth_path)
+        dataset_original = ImageNetValDataset(256, 224, False, img_dir=img_dir, ground_truth_path=ground_truth_path, shuffle=data_original_shuffle, seed=data_original_seed, num_max=data_original_num_max)
     elif model_name == 'densenet169':
         model = torchvision.models.densenet169(pretrained=True)
-        dataset_normalized = ImageNetValDataset(256, 224, True)
-        dataset_original = ImageNetValDataset(256, 224, False, shuffle=data_original_shuffle, seed=data_original_seed, num_max=data_original_num_max)
+        dataset_normalized = ImageNetValDataset(256, 224, True, img_dir=img_dir, ground_truth_path=ground_truth_path)
+        dataset_original = ImageNetValDataset(256, 224, False, img_dir=img_dir, ground_truth_path=ground_truth_path, shuffle=data_original_shuffle, seed=data_original_seed, num_max=data_original_num_max)
     elif model_name == 'densenet201':
         model = torchvision.models.densenet201(pretrained=True)
-        dataset_normalized = ImageNetValDataset(256, 224, True)
-        dataset_original = ImageNetValDataset(256, 224, False, shuffle=data_original_shuffle, seed=data_original_seed, num_max=data_original_num_max)
+        dataset_normalized = ImageNetValDataset(256, 224, True, img_dir=img_dir, ground_truth_path=ground_truth_path)
+        dataset_original = ImageNetValDataset(256, 224, False, img_dir=img_dir, ground_truth_path=ground_truth_path, shuffle=data_original_shuffle, seed=data_original_seed, num_max=data_original_num_max)
     elif model_name == 'googlenet':
         model = torchvision.models.googlenet(pretrained=True)
-        dataset_normalized = ImageNetValDataset(256, 224, True)
-        dataset_original = ImageNetValDataset(256, 224, False, shuffle=data_original_shuffle, seed=data_original_seed, num_max=data_original_num_max)
+        dataset_normalized = ImageNetValDataset(256, 224, True, img_dir=img_dir, ground_truth_path=ground_truth_path)
+        dataset_original = ImageNetValDataset(256, 224, False, img_dir=img_dir, ground_truth_path=ground_truth_path, shuffle=data_original_shuffle, seed=data_original_seed, num_max=data_original_num_max)
     elif model_name == 'inception_v3':
         model = torchvision.models.inception_v3(pretrained=True)
-        dataset_normalized = ImageNetValDataset(299, 299, True)
-        dataset_original = ImageNetValDataset(299, 299, False, shuffle=data_original_shuffle, seed=data_original_seed, num_max=data_original_num_max)
+        dataset_normalized = ImageNetValDataset(299, 299, True, img_dir=img_dir, ground_truth_path=ground_truth_path)
+        dataset_original = ImageNetValDataset(299, 299, False, img_dir=img_dir, ground_truth_path=ground_truth_path, shuffle=data_original_shuffle, seed=data_original_seed, num_max=data_original_num_max)
     elif model_name == 'mnasnet':
         model = torchvision.models.mnasnet1_0(pretrained=True)
-        dataset_normalized = ImageNetValDataset(256, 224, True)
-        dataset_original = ImageNetValDataset(256, 224, False, shuffle=data_original_shuffle, seed=data_original_seed, num_max=data_original_num_max)
+        dataset_normalized = ImageNetValDataset(256, 224, True, img_dir=img_dir, ground_truth_path=ground_truth_path)
+        dataset_original = ImageNetValDataset(256, 224, False, img_dir=img_dir, ground_truth_path=ground_truth_path, shuffle=data_original_shuffle, seed=data_original_seed, num_max=data_original_num_max)
     elif model_name == 'mobilenet_v2':
         model = torchvision.models.mobilenet_v2(pretrained=True)
-        dataset_normalized = ImageNetValDataset(256, 224, True)
-        dataset_original = ImageNetValDataset(256, 224, False, shuffle=data_original_shuffle, seed=data_original_seed, num_max=data_original_num_max)
+        dataset_normalized = ImageNetValDataset(256, 224, True, img_dir=img_dir, ground_truth_path=ground_truth_path)
+        dataset_original = ImageNetValDataset(256, 224, False, img_dir=img_dir, ground_truth_path=ground_truth_path, shuffle=data_original_shuffle, seed=data_original_seed, num_max=data_original_num_max)
     elif model_name == 'resnet50':
         model = torchvision.models.resnet50(pretrained=True)
-        dataset_normalized = ImageNetValDataset(256, 224, True)
-        dataset_original = ImageNetValDataset(256, 224, False, shuffle=data_original_shuffle, seed=data_original_seed, num_max=data_original_num_max)
+        dataset_normalized = ImageNetValDataset(256, 224, True, img_dir=img_dir, ground_truth_path=ground_truth_path)
+        dataset_original = ImageNetValDataset(256, 224, False, img_dir=img_dir, ground_truth_path=ground_truth_path, shuffle=data_original_shuffle, seed=data_original_seed, num_max=data_original_num_max)
     elif model_name == 'resnet101':
         model = torchvision.models.resnet101(pretrained=True)
-        dataset_normalized = ImageNetValDataset(256, 224, True)
-        dataset_original = ImageNetValDataset(256, 224, False, shuffle=data_original_shuffle, seed=data_original_seed, num_max=data_original_num_max)
+        dataset_normalized = ImageNetValDataset(256, 224, True, img_dir=img_dir, ground_truth_path=ground_truth_path)
+        dataset_original = ImageNetValDataset(256, 224, False, img_dir=img_dir, ground_truth_path=ground_truth_path, shuffle=data_original_shuffle, seed=data_original_seed, num_max=data_original_num_max)
     elif model_name == 'resnet152':
         model = torchvision.models.resnet152(pretrained=True)
-        dataset_normalized = ImageNetValDataset(256, 224, True)
-        dataset_original = ImageNetValDataset(256, 224, False, shuffle=data_original_shuffle, seed=data_original_seed, num_max=data_original_num_max)
+        dataset_normalized = ImageNetValDataset(256, 224, True, img_dir=img_dir, ground_truth_path=ground_truth_path)
+        dataset_original = ImageNetValDataset(256, 224, False, img_dir=img_dir, ground_truth_path=ground_truth_path, shuffle=data_original_shuffle, seed=data_original_seed, num_max=data_original_num_max)
     elif model_name == 'resnext50_32x4d':
         model = torchvision.models.resnext50_32x4d(pretrained=True)
-        dataset_normalized = ImageNetValDataset(256, 224, True)
-        dataset_original = ImageNetValDataset(256, 224, False, shuffle=data_original_shuffle, seed=data_original_seed, num_max=data_original_num_max)
+        dataset_normalized = ImageNetValDataset(256, 224, True, img_dir=img_dir, ground_truth_path=ground_truth_path)
+        dataset_original = ImageNetValDataset(256, 224, False, img_dir=img_dir, ground_truth_path=ground_truth_path, shuffle=data_original_shuffle, seed=data_original_seed, num_max=data_original_num_max)
     elif model_name == 'shufflenet_V2':
         model = torchvision.models.shufflenet_v2_x1_0(pretrained=True)
-        dataset_normalized = ImageNetValDataset(256, 224, True)
-        dataset_original = ImageNetValDataset(256, 224, False, shuffle=data_original_shuffle, seed=data_original_seed, num_max=data_original_num_max)
+        dataset_normalized = ImageNetValDataset(256, 224, True, img_dir=img_dir, ground_truth_path=ground_truth_path)
+        dataset_original = ImageNetValDataset(256, 224, False, img_dir=img_dir, ground_truth_path=ground_truth_path, shuffle=data_original_shuffle, seed=data_original_seed, num_max=data_original_num_max)
     elif model_name == 'squeezenet1_0':
         model = torchvision.models.squeezenet1_0(pretrained=True)
-        dataset_normalized = ImageNetValDataset(256, 224, True)
-        dataset_original = ImageNetValDataset(256, 224, False, shuffle=data_original_shuffle, seed=data_original_seed, num_max=data_original_num_max)
+        dataset_normalized = ImageNetValDataset(256, 224, True, img_dir=img_dir, ground_truth_path=ground_truth_path)
+        dataset_original = ImageNetValDataset(256, 224, False, img_dir=img_dir, ground_truth_path=ground_truth_path, shuffle=data_original_shuffle, seed=data_original_seed, num_max=data_original_num_max)
     elif model_name == 'squeezenet1_1':
         model = torchvision.models.squeezenet1_1(pretrained=True)
-        dataset_normalized = ImageNetValDataset(256, 224, True)
-        dataset_original = ImageNetValDataset(256, 224, False, shuffle=data_original_shuffle, seed=data_original_seed, num_max=data_original_num_max)
+        dataset_normalized = ImageNetValDataset(256, 224, True, img_dir=img_dir, ground_truth_path=ground_truth_path)
+        dataset_original = ImageNetValDataset(256, 224, False, img_dir=img_dir, ground_truth_path=ground_truth_path, shuffle=data_original_shuffle, seed=data_original_seed, num_max=data_original_num_max)
     elif model_name == 'wide_resnet50_2':
         model = torchvision.models.wide_resnet50_2(pretrained=True)
-        dataset_normalized = ImageNetValDataset(256, 224, True)
-        dataset_original = ImageNetValDataset(256, 224, False, shuffle=data_original_shuffle, seed=data_original_seed, num_max=data_original_num_max)
+        dataset_normalized = ImageNetValDataset(256, 224, True, img_dir=img_dir, ground_truth_path=ground_truth_path)
+        dataset_original = ImageNetValDataset(256, 224, False, img_dir=img_dir, ground_truth_path=ground_truth_path, shuffle=data_original_shuffle, seed=data_original_seed, num_max=data_original_num_max)
     elif model_name == 'wide_resnet101_2':
         model = torchvision.models.wide_resnet101_2(pretrained=True)
-        dataset_normalized = ImageNetValDataset(256, 224, True)
-        dataset_original = ImageNetValDataset(256, 224, False, shuffle=data_original_shuffle, seed=data_original_seed, num_max=data_original_num_max)
+        dataset_normalized = ImageNetValDataset(256, 224, True, img_dir=img_dir, ground_truth_path=ground_truth_path)
+        dataset_original = ImageNetValDataset(256, 224, False, img_dir=img_dir, ground_truth_path=ground_truth_path, shuffle=data_original_shuffle, seed=data_original_seed, num_max=data_original_num_max)
     else:
         raise Exception('Invalid model name: ' + model_name + '. Available model names :' + str(imagenet_benchmark_zoo_model_names()))
     preprocessing = (np.array(ImageNetValDataset.mean).reshape((3, 1, 1)), np.array(ImageNetValDataset.std).reshape((3, 1, 1)))

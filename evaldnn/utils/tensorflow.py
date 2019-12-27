@@ -139,9 +139,16 @@ class ImageNetValData():
                 image = tf.slice(image, offsets, cropped_shape)
             return tf.reshape(image, cropped_shape)
 
-    def __init__(self, width, height, fashion, transform=None, label_offset=0, shuffle=False, seed=None, num_max=None):
-        self._dir = common.user_home_dir() + '/EvalDNN-data/ILSVRC2012_img_val'
-        with open(self._dir + '/ILSVRC2012_validation_ground_truth.txt', 'r') as f:
+    def __init__(self, width, height, fashion, img_dir=None, ground_truth_path=None, transform=None, label_offset=0, shuffle=False, seed=None, num_max=None):
+        if img_dir is None:
+            self._dir = common.user_home_dir() + '/EvalDNN-data/ILSVRC2012_img_val'
+        else:
+            self._dir = img_dir
+
+        if ground_truth_path is None:
+            ground_truth_path = self._dir + '/ILSVRC2012_validation_ground_truth.txt'
+
+        with open(ground_truth_path, 'r') as f:
             lines = f.readlines()
         if shuffle:
             if seed is not None:
@@ -188,7 +195,7 @@ def imagenet_benchmark_zoo_model_names():
             'nasnet_a_large_331', 'pnasnet_5_large_331']
 
 
-def imagenet_benchmark_zoo(model_name, data_original_shuffle=True, data_original_seed=1997, data_original_num_max=None):
+def imagenet_benchmark_zoo(model_name,img_dir=None, ground_truth_path=None, data_original_shuffle=True, data_original_seed=1997, data_original_num_max=None):
     """Get pretrained model, validation data and other relative info for evaluation.
 
     The method provides convenience for getting a pretrained model, validation data
@@ -253,8 +260,8 @@ def imagenet_benchmark_zoo(model_name, data_original_shuffle=True, data_original
         restorer.restore(session, common.user_home_dir() + '/EvalDNN-models/tensorflow/vgg_19.ckpt')
         mean = (123.68, 116.78, 103.94)
         std = (1, 1, 1)
-        data_normalized = ImageNetValData(224, 224, 'vgg_preprocessing', transform=lambda x: (x - mean) / std, label_offset=0)
-        data_original = ImageNetValData(224, 224, 'vgg_preprocessing', transform=None, label_offset=0, shuffle=data_original_shuffle, seed=data_original_seed, num_max=data_original_num_max)
+        data_normalized = ImageNetValData(224, 224, 'vgg_preprocessing', img_dir=img_dir, ground_truth_path=ground_truth_path, transform=lambda x: (x - mean) / std, label_offset=0)
+        data_original = ImageNetValData(224, 224, 'vgg_preprocessing', img_dir=img_dir, ground_truth_path=ground_truth_path, transform=None, label_offset=0, shuffle=data_original_shuffle, seed=data_original_seed, num_max=data_original_num_max)
     elif model_name == 'resnet_v1_101':
         session = tf.compat.v1.InteractiveSession(graph=tf.Graph())
         input = tf.compat.v1.placeholder(tf.float32, shape=(None, 224, 224, 3))
@@ -267,8 +274,8 @@ def imagenet_benchmark_zoo(model_name, data_original_shuffle=True, data_original
         restorer.restore(session, common.user_home_dir() + '/EvalDNN-models/tensorflow/resnet_v1_101.ckpt')
         mean = (123.68, 116.78, 103.94)
         std = (1, 1, 1)
-        data_normalized = ImageNetValData(224, 224, 'vgg_preprocessing', transform=lambda x: (x - mean) / std, label_offset=0)
-        data_original = ImageNetValData(224, 224, 'vgg_preprocessing', transform=None, label_offset=0, shuffle=data_original_shuffle, seed=data_original_seed, num_max=data_original_num_max)
+        data_normalized = ImageNetValData(224, 224, 'vgg_preprocessing', img_dir=img_dir, ground_truth_path=ground_truth_path, transform=lambda x: (x - mean) / std, label_offset=0)
+        data_original = ImageNetValData(224, 224, 'vgg_preprocessing', img_dir=img_dir, ground_truth_path=ground_truth_path, transform=None, label_offset=0, shuffle=data_original_shuffle, seed=data_original_seed, num_max=data_original_num_max)
     elif model_name == 'resnet_v1_152':
         session = tf.compat.v1.InteractiveSession(graph=tf.Graph())
         input = tf.compat.v1.placeholder(tf.float32, shape=(None, 224, 224, 3))
@@ -281,8 +288,8 @@ def imagenet_benchmark_zoo(model_name, data_original_shuffle=True, data_original
         restorer.restore(session, common.user_home_dir() + '/EvalDNN-models/tensorflow/resnet_v1_152.ckpt')
         mean = (123.68, 116.78, 103.94)
         std = (1, 1, 1)
-        data_normalized = ImageNetValData(224, 224, 'vgg_preprocessing', transform=lambda x: (x - mean) / std, label_offset=0)
-        data_original = ImageNetValData(224, 224, 'vgg_preprocessing', transform=None, label_offset=0, shuffle=data_original_shuffle, seed=data_original_seed, num_max=data_original_num_max)
+        data_normalized = ImageNetValData(224, 224, 'vgg_preprocessing', img_dir=img_dir, ground_truth_path=ground_truth_path, transform=lambda x: (x - mean) / std, label_offset=0)
+        data_original = ImageNetValData(224, 224, 'vgg_preprocessing', img_dir=img_dir, ground_truth_path=ground_truth_path, transform=None, label_offset=0, shuffle=data_original_shuffle, seed=data_original_seed, num_max=data_original_num_max)
     elif model_name == 'resnet_v1_50':
         session = tf.compat.v1.InteractiveSession(graph=tf.Graph())
         input = tf.compat.v1.placeholder(tf.float32, shape=(None, 224, 224, 3))
@@ -295,8 +302,8 @@ def imagenet_benchmark_zoo(model_name, data_original_shuffle=True, data_original
         restorer.restore(session, common.user_home_dir() + '/EvalDNN-models/tensorflow/resnet_v1_50.ckpt')
         mean = (123.68, 116.78, 103.94)
         std = (1, 1, 1)
-        data_normalized = ImageNetValData(224, 224, 'vgg_preprocessing', transform=lambda x: (x - mean) / std, label_offset=0)
-        data_original = ImageNetValData(224, 224, 'vgg_preprocessing', transform=None, label_offset=0, shuffle=data_original_shuffle, seed=data_original_seed, num_max=data_original_num_max)
+        data_normalized = ImageNetValData(224, 224, 'vgg_preprocessing', img_dir=img_dir, ground_truth_path=ground_truth_path, transform=lambda x: (x - mean) / std, label_offset=0)
+        data_original = ImageNetValData(224, 224, 'vgg_preprocessing', img_dir=img_dir, ground_truth_path=ground_truth_path, transform=None, label_offset=0, shuffle=data_original_shuffle, seed=data_original_seed, num_max=data_original_num_max)
     elif model_name == 'inception_v1':
         session = tf.compat.v1.InteractiveSession(graph=tf.Graph())
         input = tf.compat.v1.placeholder(tf.float32, shape=(None, 224, 224, 3))
@@ -308,8 +315,8 @@ def imagenet_benchmark_zoo(model_name, data_original_shuffle=True, data_original
         restorer.restore(session, common.user_home_dir() + '/EvalDNN-models/tensorflow/inception_v1.ckpt')
         mean = (127.5, 127.5, 127.5)
         std = (127.5, 127.5, 127.5)
-        data_normalized = ImageNetValData(224, 224, 'inception_preprocessing', transform=lambda x: (x - mean) / std, label_offset=1)
-        data_original = ImageNetValData(224, 224, 'inception_preprocessing', transform=None, label_offset=1, shuffle=data_original_shuffle, seed=data_original_seed, num_max=data_original_num_max)
+        data_normalized = ImageNetValData(224, 224, 'inception_preprocessing', img_dir=img_dir, ground_truth_path=ground_truth_path, transform=lambda x: (x - mean) / std, label_offset=1)
+        data_original = ImageNetValData(224, 224, 'inception_preprocessing', img_dir=img_dir, ground_truth_path=ground_truth_path, transform=None, label_offset=1, shuffle=data_original_shuffle, seed=data_original_seed, num_max=data_original_num_max)
     elif model_name == 'inception_v2':
         session = tf.compat.v1.InteractiveSession(graph=tf.Graph())
         input = tf.compat.v1.placeholder(tf.float32, shape=(None, 224, 224, 3))
@@ -321,8 +328,8 @@ def imagenet_benchmark_zoo(model_name, data_original_shuffle=True, data_original
         restorer.restore(session, common.user_home_dir() + '/EvalDNN-models/tensorflow/inception_v2.ckpt')
         mean = (127.5, 127.5, 127.5)
         std = (127.5, 127.5, 127.5)
-        data_normalized = ImageNetValData(224, 224, 'inception_preprocessing', transform=lambda x: (x - mean) / std, label_offset=1)
-        data_original = ImageNetValData(224, 224, 'inception_preprocessing', transform=None, label_offset=1, shuffle=data_original_shuffle, seed=data_original_seed, num_max=data_original_num_max)
+        data_normalized = ImageNetValData(224, 224, 'inception_preprocessing', img_dir=img_dir, ground_truth_path=ground_truth_path, transform=lambda x: (x - mean) / std, label_offset=1)
+        data_original = ImageNetValData(224, 224, 'inception_preprocessing', img_dir=img_dir, ground_truth_path=ground_truth_path, transform=None, label_offset=1, shuffle=data_original_shuffle, seed=data_original_seed, num_max=data_original_num_max)
     elif model_name == 'inception_v3':
         session = tf.compat.v1.InteractiveSession(graph=tf.Graph())
         input = tf.compat.v1.placeholder(tf.float32, shape=(None, 299, 299, 3))
@@ -334,8 +341,8 @@ def imagenet_benchmark_zoo(model_name, data_original_shuffle=True, data_original
         restorer.restore(session, common.user_home_dir() + '/EvalDNN-models/tensorflow/inception_v3.ckpt')
         mean = (127.5, 127.5, 127.5)
         std = (127.5, 127.5, 127.5)
-        data_normalized = ImageNetValData(299, 299, 'inception_preprocessing', transform=lambda x: (x - mean) / std, label_offset=1)
-        data_original = ImageNetValData(299, 299, 'inception_preprocessing', transform=None, label_offset=1, shuffle=data_original_shuffle, seed=data_original_seed, num_max=data_original_num_max)
+        data_normalized = ImageNetValData(299, 299, 'inception_preprocessing', img_dir=img_dir, ground_truth_path=ground_truth_path, transform=lambda x: (x - mean) / std, label_offset=1)
+        data_original = ImageNetValData(299, 299, 'inception_preprocessing', img_dir=img_dir, ground_truth_path=ground_truth_path, transform=None, label_offset=1, shuffle=data_original_shuffle, seed=data_original_seed, num_max=data_original_num_max)
     elif model_name == 'inception_v4':
         session = tf.compat.v1.InteractiveSession(graph=tf.Graph())
         input = tf.compat.v1.placeholder(tf.float32, shape=(None, 299, 299, 3))
@@ -347,8 +354,8 @@ def imagenet_benchmark_zoo(model_name, data_original_shuffle=True, data_original
         restorer.restore(session, common.user_home_dir() + '/EvalDNN-models/tensorflow/inception_v4.ckpt')
         mean = (127.5, 127.5, 127.5)
         std = (127.5, 127.5, 127.5)
-        data_normalized = ImageNetValData(299, 299, 'inception_preprocessing', transform=lambda x: (x - mean) / std, label_offset=1)
-        data_original = ImageNetValData(299, 299, 'inception_preprocessing', transform=None, label_offset=1, shuffle=data_original_shuffle, seed=data_original_seed, num_max=data_original_num_max)
+        data_normalized = ImageNetValData(299, 299, 'inception_preprocessing', img_dir=img_dir, ground_truth_path=ground_truth_path, transform=lambda x: (x - mean) / std, label_offset=1)
+        data_original = ImageNetValData(299, 299, 'inception_preprocessing', img_dir=img_dir, ground_truth_path=ground_truth_path, transform=None, label_offset=1, shuffle=data_original_shuffle, seed=data_original_seed, num_max=data_original_num_max)
     elif model_name == 'inception_resnet_v2':
         session = tf.compat.v1.InteractiveSession(graph=tf.Graph())
         input = tf.compat.v1.placeholder(tf.float32, shape=(None, 299, 299, 3))
@@ -360,8 +367,8 @@ def imagenet_benchmark_zoo(model_name, data_original_shuffle=True, data_original
         restorer.restore(session, common.user_home_dir() + '/EvalDNN-models/tensorflow/inception_resnet_v2_2016_08_30.ckpt')
         mean = (127.5, 127.5, 127.5)
         std = (127.5, 127.5, 127.5)
-        data_normalized = ImageNetValData(299, 299, 'inception_preprocessing', transform=lambda x: (x - mean) / std, label_offset=1)
-        data_original = ImageNetValData(299, 299, 'inception_preprocessing', transform=None, label_offset=1, shuffle=data_original_shuffle, seed=data_original_seed, num_max=data_original_num_max)
+        data_normalized = ImageNetValData(299, 299, 'inception_preprocessing', img_dir=img_dir, ground_truth_path=ground_truth_path, transform=lambda x: (x - mean) / std, label_offset=1)
+        data_original = ImageNetValData(299, 299, 'inception_preprocessing', img_dir=img_dir, ground_truth_path=ground_truth_path, transform=None, label_offset=1, shuffle=data_original_shuffle, seed=data_original_seed, num_max=data_original_num_max)
     elif model_name == 'mobilenet_v1_0_5_160':
         graph = tf.Graph()
         with tf.io.gfile.GFile(common.user_home_dir() + '/EvalDNN-models/tensorflow/mobilenet_v1_0.5_160/mobilenet_v1_0.5_160_frozen.pb', 'rb') as f:
@@ -374,8 +381,8 @@ def imagenet_benchmark_zoo(model_name, data_original_shuffle=True, data_original
         logits = graph.get_tensor_by_name('import/MobilenetV1/Predictions/Reshape_1:0')
         mean = (127.5, 127.5, 127.5)
         std = (127.5, 127.5, 127.5)
-        data_normalized = ImageNetValData(160, 160, 'inception_preprocessing', transform=lambda x: (x - mean) / std, label_offset=1)
-        data_original = ImageNetValData(160, 160, 'inception_preprocessing', transform=None, label_offset=1, shuffle=data_original_shuffle, seed=data_original_seed, num_max=data_original_num_max)
+        data_normalized = ImageNetValData(160, 160, 'inception_preprocessing', img_dir=img_dir, ground_truth_path=ground_truth_path, transform=lambda x: (x - mean) / std, label_offset=1)
+        data_original = ImageNetValData(160, 160, 'inception_preprocessing', img_dir=img_dir, ground_truth_path=ground_truth_path, transform=None, label_offset=1, shuffle=data_original_shuffle, seed=data_original_seed, num_max=data_original_num_max)
     elif model_name == 'mobilenet_v1_0_25_128':
         graph = tf.Graph()
         with tf.io.gfile.GFile(common.user_home_dir() + '/EvalDNN-models/tensorflow/mobilenet_v1_0.25_128/mobilenet_v1_0.25_128_frozen.pb', 'rb') as f:
@@ -388,8 +395,8 @@ def imagenet_benchmark_zoo(model_name, data_original_shuffle=True, data_original
         logits = graph.get_tensor_by_name('import/MobilenetV1/Predictions/Reshape_1:0')
         mean = (127.5, 127.5, 127.5)
         std = (127.5, 127.5, 127.5)
-        data_normalized = ImageNetValData(128, 128, 'inception_preprocessing', transform=lambda x: (x - mean) / std, label_offset=1)
-        data_original = ImageNetValData(128, 128, 'inception_preprocessing', transform=None, label_offset=1, shuffle=data_original_shuffle, seed=data_original_seed, num_max=data_original_num_max)
+        data_normalized = ImageNetValData(128, 128, 'inception_preprocessing', img_dir=img_dir, ground_truth_path=ground_truth_path, transform=lambda x: (x - mean) / std, label_offset=1)
+        data_original = ImageNetValData(128, 128, 'inception_preprocessing', img_dir=img_dir, ground_truth_path=ground_truth_path, transform=None, label_offset=1, shuffle=data_original_shuffle, seed=data_original_seed, num_max=data_original_num_max)
     elif model_name == 'mobilenet_v1_1_0_224':
         graph = tf.Graph()
         with tf.io.gfile.GFile(common.user_home_dir() + '/EvalDNN-models/tensorflow/mobilenet_v1_1.0_224/mobilenet_v1_1.0_224_frozen.pb', 'rb') as f:
@@ -402,8 +409,8 @@ def imagenet_benchmark_zoo(model_name, data_original_shuffle=True, data_original
         logits = graph.get_tensor_by_name('import/MobilenetV1/Predictions/Reshape_1:0')
         mean = (127.5, 127.5, 127.5)
         std = (127.5, 127.5, 127.5)
-        data_normalized = ImageNetValData(224, 224, 'inception_preprocessing', transform=lambda x: (x - mean) / std, label_offset=1)
-        data_original = ImageNetValData(224, 224, 'inception_preprocessing', transform=None, label_offset=1, shuffle=data_original_shuffle, seed=data_original_seed, num_max=data_original_num_max)
+        data_normalized = ImageNetValData(224, 224, 'inception_preprocessing', img_dir=img_dir, ground_truth_path=ground_truth_path, transform=lambda x: (x - mean) / std, label_offset=1)
+        data_original = ImageNetValData(224, 224, 'inception_preprocessing', img_dir=img_dir, ground_truth_path=ground_truth_path, transform=None, label_offset=1, shuffle=data_original_shuffle, seed=data_original_seed, num_max=data_original_num_max)
     elif model_name == 'mobilenet_v2_1_0_224':
         graph = tf.Graph()
         with tf.io.gfile.GFile(common.user_home_dir() + '/EvalDNN-models/tensorflow/mobilenet_v2_1.0_224/mobilenet_v2_1.0_224_frozen.pb', 'rb') as f:
@@ -416,8 +423,8 @@ def imagenet_benchmark_zoo(model_name, data_original_shuffle=True, data_original
         logits = graph.get_tensor_by_name('import/MobilenetV2/Predictions/Reshape_1:0')
         mean = (127.5, 127.5, 127.5)
         std = (127.5, 127.5, 127.5)
-        data_normalized = ImageNetValData(224, 224, 'inception_preprocessing', transform=lambda x: (x - mean) / std, label_offset=1)
-        data_original = ImageNetValData(224, 224, 'inception_preprocessing', transform=None, label_offset=1, shuffle=data_original_shuffle, seed=data_original_seed, num_max=data_original_num_max)
+        data_normalized = ImageNetValData(224, 224, 'inception_preprocessing', img_dir=img_dir, ground_truth_path=ground_truth_path, transform=lambda x: (x - mean) / std, label_offset=1)
+        data_original = ImageNetValData(224, 224, 'inception_preprocessing', img_dir=img_dir, ground_truth_path=ground_truth_path, transform=None, label_offset=1, shuffle=data_original_shuffle, seed=data_original_seed, num_max=data_original_num_max)
     elif model_name == 'mobilenet_v2_1_4_224':
         graph = tf.Graph()
         with tf.io.gfile.GFile(common.user_home_dir() + '/EvalDNN-models/tensorflow/mobilenet_v2_1.4_224/mobilenet_v2_1.4_224_frozen.pb', 'rb') as f:
@@ -430,8 +437,8 @@ def imagenet_benchmark_zoo(model_name, data_original_shuffle=True, data_original
         logits = graph.get_tensor_by_name('import/MobilenetV2/Predictions/Reshape_1:0')
         mean = (127.5, 127.5, 127.5)
         std = (127.5, 127.5, 127.5)
-        data_normalized = ImageNetValData(224, 224, 'inception_preprocessing', transform=lambda x: (x - mean) / std, label_offset=1)
-        data_original = ImageNetValData(224, 224, 'inception_preprocessing', transform=None, label_offset=1, shuffle=data_original_shuffle, seed=data_original_seed, num_max=data_original_num_max)
+        data_normalized = ImageNetValData(224, 224, 'inception_preprocessing', img_dir=img_dir, ground_truth_path=ground_truth_path, transform=lambda x: (x - mean) / std, label_offset=1)
+        data_original = ImageNetValData(224, 224, 'inception_preprocessing', img_dir=img_dir, ground_truth_path=ground_truth_path, transform=None, label_offset=1, shuffle=data_original_shuffle, seed=data_original_seed, num_max=data_original_num_max)
     elif model_name == 'nasnet_a_large_331':
         session = tf.compat.v1.InteractiveSession(graph=tf.Graph())
         input = tf.compat.v1.placeholder(tf.float32, shape=(None, 331, 331, 3))
@@ -443,8 +450,8 @@ def imagenet_benchmark_zoo(model_name, data_original_shuffle=True, data_original
         restorer.restore(session, common.user_home_dir() + '/EvalDNN-models/tensorflow/nasnet-a_large_04_10_2017/model.ckpt')
         mean = (127.5, 127.5, 127.5)
         std = (127.5, 127.5, 127.5)
-        data_normalized = ImageNetValData(331, 331, 'inception_preprocessing', transform=lambda x: (x - mean) / std, label_offset=1)
-        data_original = ImageNetValData(331, 331, 'inception_preprocessing', transform=None, label_offset=1, shuffle=data_original_shuffle, seed=data_original_seed, num_max=data_original_num_max)
+        data_normalized = ImageNetValData(331, 331, 'inception_preprocessing', img_dir=img_dir, ground_truth_path=ground_truth_path, transform=lambda x: (x - mean) / std, label_offset=1)
+        data_original = ImageNetValData(331, 331, 'inception_preprocessing', img_dir=img_dir, ground_truth_path=ground_truth_path, transform=None, label_offset=1, shuffle=data_original_shuffle, seed=data_original_seed, num_max=data_original_num_max)
     elif model_name == 'nasnet_a_mobile_224':
         session = tf.compat.v1.InteractiveSession(graph=tf.Graph())
         input = tf.compat.v1.placeholder(tf.float32, shape=(None, 224, 224, 3))
@@ -456,8 +463,8 @@ def imagenet_benchmark_zoo(model_name, data_original_shuffle=True, data_original
         restorer.restore(session, common.user_home_dir() + '/EvalDNN-models/tensorflow/nasnet-a_mobile_04_10_2017/model.ckpt')
         mean = (127.5, 127.5, 127.5)
         std = (127.5, 127.5, 127.5)
-        data_normalized = ImageNetValData(224, 224, 'inception_preprocessing', transform=lambda x: (x - mean) / std, label_offset=1)
-        data_original = ImageNetValData(224, 224, 'inception_preprocessing', transform=None, label_offset=1, shuffle=data_original_shuffle, seed=data_original_seed, num_max=data_original_num_max)
+        data_normalized = ImageNetValData(224, 224, 'inception_preprocessing', img_dir=img_dir, ground_truth_path=ground_truth_path, transform=lambda x: (x - mean) / std, label_offset=1)
+        data_original = ImageNetValData(224, 224, 'inception_preprocessing', img_dir=img_dir, ground_truth_path=ground_truth_path, transform=None, label_offset=1, shuffle=data_original_shuffle, seed=data_original_seed, num_max=data_original_num_max)
     elif model_name == 'pnasnet_5_large_331':
         session = tf.compat.v1.InteractiveSession(graph=tf.Graph())
         input = tf.compat.v1.placeholder(tf.float32, shape=(None, 331, 331, 3))
@@ -469,8 +476,8 @@ def imagenet_benchmark_zoo(model_name, data_original_shuffle=True, data_original
         restorer.restore(session, common.user_home_dir() + '/EvalDNN-models/tensorflow/pnasnet-5_large_2017_12_13/model.ckpt')
         mean = (127.5, 127.5, 127.5)
         std = (127.5, 127.5, 127.5)
-        data_normalized = ImageNetValData(331, 331, 'inception_preprocessing', transform=lambda x: (x - mean) / std, label_offset=1)
-        data_original = ImageNetValData(331, 331, 'inception_preprocessing', transform=None, label_offset=1, shuffle=data_original_shuffle, seed=data_original_seed, num_max=data_original_num_max)
+        data_normalized = ImageNetValData(331, 331, 'inception_preprocessing', img_dir=img_dir, ground_truth_path=ground_truth_path, transform=lambda x: (x - mean) / std, label_offset=1)
+        data_original = ImageNetValData(331, 331, 'inception_preprocessing', img_dir=img_dir, ground_truth_path=ground_truth_path, transform=None, label_offset=1, shuffle=data_original_shuffle, seed=data_original_seed, num_max=data_original_num_max)
     elif model_name == 'pnasnet_5_mobile_224':
         session = tf.compat.v1.InteractiveSession(graph=tf.Graph())
         input = tf.compat.v1.placeholder(tf.float32, shape=(None, 224, 224, 3))
@@ -482,8 +489,8 @@ def imagenet_benchmark_zoo(model_name, data_original_shuffle=True, data_original
         restorer.restore(session, common.user_home_dir() + '/EvalDNN-models/tensorflow/pnasnet-5_mobile_2017_12_13/model.ckpt')
         mean = (127.5, 127.5, 127.5)
         std = (127.5, 127.5, 127.5)
-        data_normalized = ImageNetValData(224, 224, 'inception_preprocessing', transform=lambda x: (x - mean) / std, label_offset=1)
-        data_original = ImageNetValData(224, 224, 'inception_preprocessing', transform=None, label_offset=1, shuffle=data_original_shuffle, seed=data_original_seed, num_max=data_original_num_max)
+        data_normalized = ImageNetValData(224, 224, 'inception_preprocessing', img_dir=img_dir, ground_truth_path=ground_truth_path, transform=lambda x: (x - mean) / std, label_offset=1)
+        data_original = ImageNetValData(224, 224, 'inception_preprocessing', img_dir=img_dir, ground_truth_path=ground_truth_path, transform=None, label_offset=1, shuffle=data_original_shuffle, seed=data_original_seed, num_max=data_original_num_max)
     elif model_name == 'resnet_v2_101':
         session = tf.compat.v1.InteractiveSession(graph=tf.Graph())
         input = tf.compat.v1.placeholder(tf.float32, shape=(None, 299, 299, 3))
@@ -496,8 +503,8 @@ def imagenet_benchmark_zoo(model_name, data_original_shuffle=True, data_original
         restorer.restore(session, common.user_home_dir() + '/EvalDNN-models/tensorflow/resnet_v2_101_2017_04_14/resnet_v2_101.ckpt')
         mean = (127.5, 127.5, 127.5)
         std = (127.5, 127.5, 127.5)
-        data_normalized = ImageNetValData(299, 299, 'inception_preprocessing', transform=lambda x: (x - mean) / std, label_offset=1)
-        data_original = ImageNetValData(299, 299, 'inception_preprocessing', transform=None, label_offset=1, shuffle=data_original_shuffle, seed=data_original_seed, num_max=data_original_num_max)
+        data_normalized = ImageNetValData(299, 299, 'inception_preprocessing', img_dir=img_dir, ground_truth_path=ground_truth_path, transform=lambda x: (x - mean) / std, label_offset=1)
+        data_original = ImageNetValData(299, 299, 'inception_preprocessing', img_dir=img_dir, ground_truth_path=ground_truth_path, transform=None, label_offset=1, shuffle=data_original_shuffle, seed=data_original_seed, num_max=data_original_num_max)
     elif model_name == 'resnet_v2_152':
         session = tf.compat.v1.InteractiveSession(graph=tf.Graph())
         input = tf.compat.v1.placeholder(tf.float32, shape=(None, 299, 299, 3))
@@ -510,8 +517,8 @@ def imagenet_benchmark_zoo(model_name, data_original_shuffle=True, data_original
         restorer.restore(session, common.user_home_dir() + '/EvalDNN-models/tensorflow/resnet_v2_152_2017_04_14/resnet_v2_152.ckpt')
         mean = (127.5, 127.5, 127.5)
         std = (127.5, 127.5, 127.5)
-        data_normalized = ImageNetValData(299, 299, 'inception_preprocessing', transform=lambda x: (x - mean) / std, label_offset=1)
-        data_original = ImageNetValData(299, 299, 'inception_preprocessing', transform=None, label_offset=1, shuffle=data_original_shuffle, seed=data_original_seed, num_max=data_original_num_max)
+        data_normalized = ImageNetValData(299, 299, 'inception_preprocessing', img_dir=img_dir, ground_truth_path=ground_truth_path, transform=lambda x: (x - mean) / std, label_offset=1)
+        data_original = ImageNetValData(299, 299, 'inception_preprocessing', img_dir=img_dir, ground_truth_path=ground_truth_path, transform=None, label_offset=1, shuffle=data_original_shuffle, seed=data_original_seed, num_max=data_original_num_max)
     elif model_name == 'resnet_v2_50':
         session = tf.compat.v1.InteractiveSession(graph=tf.Graph())
         input = tf.compat.v1.placeholder(tf.float32, shape=(None, 299, 299, 3))
@@ -524,8 +531,8 @@ def imagenet_benchmark_zoo(model_name, data_original_shuffle=True, data_original
         restorer.restore(session, common.user_home_dir() + '/EvalDNN-models/tensorflow/resnet_v2_50_2017_04_14/resnet_v2_50.ckpt')
         mean = (127.5, 127.5, 127.5)
         std = (127.5, 127.5, 127.5)
-        data_normalized = ImageNetValData(299, 299, 'inception_preprocessing', transform=lambda x: (x - mean) / std, label_offset=1)
-        data_original = ImageNetValData(299, 299, 'inception_preprocessing', transform=None, label_offset=1, shuffle=data_original_shuffle, seed=data_original_seed, num_max=data_original_num_max)
+        data_normalized = ImageNetValData(299, 299, 'inception_preprocessing', img_dir=img_dir, ground_truth_path=ground_truth_path, transform=lambda x: (x - mean) / std, label_offset=1)
+        data_original = ImageNetValData(299, 299, 'inception_preprocessing', img_dir=img_dir, ground_truth_path=ground_truth_path, transform=None, label_offset=1, shuffle=data_original_shuffle, seed=data_original_seed, num_max=data_original_num_max)
     else:
         raise Exception('Invalid model name: ' + model_name + '. Available model names :' + str(imagenet_benchmark_zoo_model_names()))
     bounds = (0, 255)
