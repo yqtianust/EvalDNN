@@ -60,4 +60,4 @@ python3 evaldnn/benchmarks/eval_keras
 
 To evaluate the model using ImageNet dataset, please download it and put it into `/EvalDNN-data/ILSVRC2012_img_val`. 
 
-The file `ILSVRC2012_validation_ground_truth.txt` in develop kit should also be put into above folder.
+The file `ILSVRC2012_validation_ground_truth.txt` in github release should also be put into above folder.
