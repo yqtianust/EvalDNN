@@ -13,6 +13,12 @@ A video is here: https://youtu.be/v69bNJN2bJc
 
 A paper to inroduce this tool is in submit and will be released soon. 
 
+## Update on 9th March
+
+The paper is accepted by ICSE'20 Demo Track
+
+**We have collected some feedback from users and we are preparing new version with more functionality.**
+
 ## Frameworks and Metrics
 EvalDNN supports the model based on following frameworks:
 
